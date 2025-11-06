@@ -74,8 +74,12 @@ WSGI_APPLICATION = "bookflow.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "bookflow_db",
+        "USER": "bookflow_user",
+        "PASSWORD": "1234",
+        "HOST": "192.168.1.73",  #개인 ip주소로 수정해서 사용
+        "PORT": "5432",
     }
 }
 
