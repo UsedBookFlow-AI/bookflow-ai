@@ -11,6 +11,10 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -49,7 +53,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-ROOT_URLCONF = "bookflow.urls"
+ROOT_URLCONF = "config.urls"
 
 TEMPLATES = [
     {
@@ -75,13 +79,17 @@ WSGI_APPLICATION = "bookflow.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "bookflow_db",
-        "USER": "bookflow_user",
-        "PASSWORD": "1234",
-        "HOST": "192.168.1.73",  #개인 ip주소로 수정해서 사용
-        "PORT": "5432",
+        "NAME": os.getenv("NEON_DB_NAME"),
+        "USER": os.getenv("NEON_DB_USER"),
+        "PASSWORD": os.getenv("NEON_DB_PASSWORD"),
+        "HOST": os.getenv("NEON_DB_HOST"),
+        "PORT": os.getenv("NEON_DB_PORT", "5432"),
+        "OPTIONS": {
+            "sslmode": "require",  # connection string에 있던 sslmode=require
+        },
     }
 }
+
 
 
 # Password validation
