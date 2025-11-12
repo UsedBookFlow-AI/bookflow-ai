@@ -20,5 +20,5 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/bookflow', include('db_core.urls')),
+    path('api/bookflow/', include('db_core.urls')),
 ]
