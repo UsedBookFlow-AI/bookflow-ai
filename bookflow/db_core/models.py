@@ -2,7 +2,6 @@
 import uuid
 from django.db import models
 from django.contrib.auth.models import User
-from db_core.models import Institution
 
 class Institution(models.Model):
     user = models.ForeignKey(User, on_delete = models.CASCADE, related_name='institution')
@@ -16,3 +15,23 @@ class Institution(models.Model):
         return f"{self.institution_name} ({self.user.username})"
 
 
+class InventoryBook(models.Model):
+    CONDITION_CHOICES = [
+        ('새 것', '새 것'),
+        ('양호', '양호'),
+        ('낡음', '낡음'),
+    ]
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    institution = models.ForeignKey(Institution, on_delete=models.CASCADE, related_name = 'books')
+    title = models.CharField(max_length=255, null=False)
+    author = models.CharField(max_length=255, blank=True, null=True)
+    category = models.CharField(max_length=100, blank=True, null=True)
+    stock = models.IntegerField(default=0)
+    condition = models.CharField(max_length=10, choices=CONDITION_CHOICES, default='양호')
+
+    created_at = models.DateTimeField(auto_now_add = True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"[{self.title}] ({self.institution.institution_name})"

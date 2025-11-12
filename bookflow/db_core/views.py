@@ -2,7 +2,9 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from db_core.services.user_service import UserService
-from db_core.serializers import RegisterUserSerializer, LoginUserSerializer
+from db_core.services.store_stock_data import StockBookService
+from db_core.serializers import RegisterUserSerializer, LoginUserSerializer, StoreInventoryBookSerializer
+from django.contrib.auth.models import User
 
 class RegisterUserView(APIView):
     def post(self, request):
@@ -35,3 +37,30 @@ class LoginUserView(APIView):
             )
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_401_UNAUTHORIZED)
+        
+
+class StoreInventoryBookView(APIView):
+    def post(self, request):
+        serializer = StoreInventoryBookSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        data = serializer.validated_data
+        user_id = data.pop('user_id')
+
+        try:
+            user = User.objects.get(username=user_id)
+        except User.DoesNotExist:
+            return Response({"error": "해당 사용자 ID가 존재하지 않습니다."}, status=status.HTTP_400_BAD_REQUEST)
+
+
+        try:
+            book = StockBookService.add_inventory_book(user, data)
+            return Response({
+                "message": "도서 등록 완료",
+                "book_id": str(book.id),
+                "title": book.title,
+                "institution": book.institution.institution_name,
+                "condition": book.condition
+            }, status=status.HTTP_201_CREATED)
+        except ValueError as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
