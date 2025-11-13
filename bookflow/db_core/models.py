@@ -35,3 +35,15 @@ class InventoryBook(models.Model):
 
     def __str__(self):
         return f"[{self.title}] ({self.institution.institution_name})"
+    
+
+
+class BookSupplyRequest(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    raw_request = models.TextField()
+    target_age = models.CharField(max_length=50, null=True, blank=True)
+    book_category = models.CharField(max_length=100, null=True, blank=True)
+    book_amount = models.IntegerField(null=True, blank=True)
+    others = models.TextField(null=True, blank=True)
+    status = models.CharField(max_length=20, default = 'pending')
+    created_at = models.DateTimeField(auto_now_add=True)

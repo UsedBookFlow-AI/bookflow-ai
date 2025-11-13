@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from db_core.models import Institution, InventoryBook
+from db_core.models import Institution, InventoryBook, BookSupplyRequest
 
 class RegisterUserSerializer(serializers.Serializer):
     user_id = serializers.CharField(max_length=150)
@@ -12,9 +12,11 @@ class RegisterUserSerializer(serializers.Serializer):
     contact = serializers.CharField(max_length=255)
 
 
+
 class LoginUserSerializer(serializers.Serializer):
     user_id = serializers.CharField(max_length=150)
     password = serializers.CharField(max_length=128)
+
 
 
 class StoreInventoryBookSerializer(serializers.ModelSerializer):
@@ -59,3 +61,13 @@ class StoreInventoryBookSerializer(serializers.ModelSerializer):
 
         book = InventoryBook.objects.create(institution=institution, **validated_data)
         return book
+
+
+class StoreBookSupplyRequestSerializer(serializers.Serializer):
+    user_id = serializers.CharField(max_length=150)
+    raw_request = serializers.CharField()
+
+    def validate_raw_request(self, value):
+        if not value.strip():
+            raise serializers.ValidationError("요청 내용을 입력해주세요")
+        return value

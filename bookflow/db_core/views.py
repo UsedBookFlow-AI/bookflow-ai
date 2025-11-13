@@ -2,8 +2,9 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from db_core.services.user_service import UserService
-from db_core.services.store_stock_data import StockBookService
-from db_core.serializers import RegisterUserSerializer, LoginUserSerializer, StoreInventoryBookSerializer
+from db_core.services.stock_book_service import StockBookService
+from db_core.services.book_supply_request_service import BookSupplyRequestService
+from db_core.serializers import RegisterUserSerializer, LoginUserSerializer, StoreInventoryBookSerializer, StoreBookSupplyRequestSerializer
 from django.contrib.auth.models import User
 
 class RegisterUserView(APIView):
@@ -64,3 +65,26 @@ class StoreInventoryBookView(APIView):
             }, status=status.HTTP_201_CREATED)
         except ValueError as e:
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        
+
+class StoreBookSupplyRequestView(APIView):
+    def post(self, request):
+        serializer = StoreBookSupplyRequestSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        user_id = serializer.validated_data['user_id']
+        user=  User.objects.get(username=user_id)
+        
+        book_request = BookSupplyRequestService.create_request(
+            user=user,
+            request_text=serializer.validated_data['raw_request']
+        )
+
+        return Response(
+            {
+                "message": "도서 수급 요청이 저장되었습니다",
+                "request_id" : book_request.id
+            },
+            status = 201
+        )
+
