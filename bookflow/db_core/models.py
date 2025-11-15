@@ -17,9 +17,9 @@ class Institution(models.Model):
 
 class InventoryBook(models.Model):
     CONDITION_CHOICES = [
-        ('새 것', '새 것'),
+        ('새 책', '새 책'),
         ('양호', '양호'),
-        ('낡음', '낡음'),
+        ('손상', '손상'),
     ]
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -27,8 +27,10 @@ class InventoryBook(models.Model):
     title = models.CharField(max_length=255, null=False)
     author = models.CharField(max_length=255, blank=True, null=True)
     category = models.CharField(max_length=100, blank=True, null=True)
+    genre = models.CharField(max_length=100, blank=True, null=True)
     stock = models.IntegerField(default=0)
     condition = models.CharField(max_length=10, choices=CONDITION_CHOICES, default='양호')
+    description = models.TextField(blank=True, null=True)
 
     created_at = models.DateTimeField(auto_now_add = True)
     updated_at = models.DateTimeField(auto_now=True)

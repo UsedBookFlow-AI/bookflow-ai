@@ -29,8 +29,9 @@ class StoreInventoryBookSerializer(serializers.ModelSerializer):
             'title',
             'author',
             'category',
+            'genre',
             'stock',
-            'condition'
+            'condition',
         ]
 
     def validate(self, data):

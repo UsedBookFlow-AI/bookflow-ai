@@ -55,14 +55,25 @@ class StoreInventoryBookView(APIView):
 
 
         try:
-            book = StockBookService.add_inventory_book(user, data)
-            return Response({
-                "message": "도서 등록 완료",
+            book, status_flag = StockBookService.add_inventory_book(user, data)
+
+            if status_flag == "updated": #기존 재고가 있을 시
+                return Response({
+                    "message": "기존 도서 재고가 증가했습니다.",
+                    "book_id": str(book.id),
+                    "title": book.title,
+                    "new_stock": book.stock,
+                    "institution": book.institution.institution_name
+                }, status=status.HTTP_200_OK)
+
+            return Response({ # 새 책 등록 시
+                "message": "새 도서가 등록되었습니다.",
                 "book_id": str(book.id),
                 "title": book.title,
-                "institution": book.institution.institution_name,
-                "condition": book.condition
+                "stock": book.stock,
+                "institution": book.institution.institution_name
             }, status=status.HTTP_201_CREATED)
+
         except ValueError as e:
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
         
