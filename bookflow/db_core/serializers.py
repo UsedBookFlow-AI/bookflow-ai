@@ -87,5 +87,6 @@ class InventoryBookResponseSerializer(serializers.ModelSerializer):
             "genre",
             "stock",
             "condition",
+            "institution",
             "institution_name"
         ]

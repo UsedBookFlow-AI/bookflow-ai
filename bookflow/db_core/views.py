@@ -103,6 +103,7 @@ class StoreBookSupplyRequestView(APIView):
         return Response(
             {
                 "message": "추천 도서 목록",
+                "user_id" : user_id,
                 "books" : books_serialized.data
             },
             status = 201
