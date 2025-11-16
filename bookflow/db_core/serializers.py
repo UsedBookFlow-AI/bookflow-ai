@@ -72,3 +72,20 @@ class StoreBookSupplyRequestSerializer(serializers.Serializer):
         if not value.strip():
             raise serializers.ValidationError("요청 내용을 입력해주세요")
         return value
+
+
+class InventoryBookResponseSerializer(serializers.ModelSerializer):
+    institution_name = serializers.CharField(source="institution.institution_name")
+
+    class Meta:
+        model = InventoryBook
+        fields = [
+            "id",
+            "title",
+            "author",
+            "category",
+            "genre",
+            "stock",
+            "condition",
+            "institution_name"
+        ]

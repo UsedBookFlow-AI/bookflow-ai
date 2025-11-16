@@ -1,4 +1,4 @@
-from db_core.models import InventoryBook, Institution, BookSupplyRequest
+from db_core.models import BookSupplyRequest
 from django.contrib.auth.models import User
 
 class BookSupplyRequestService:

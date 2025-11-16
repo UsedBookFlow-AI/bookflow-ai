@@ -4,9 +4,7 @@ from django.db import transaction
 
 
 class StockBookService:
-    # --------------------------
     # 1. User 조회
-    # --------------------------
     @staticmethod
     def get_user(user_id):
         try:
@@ -15,9 +13,7 @@ class StockBookService:
             raise ValueError("해당 사용자 ID가 존재하지 않습니다.")
 
 
-    # --------------------------
     # 2. Institution 조회
-    # --------------------------
     @staticmethod
     def get_institution(user):
         try:
@@ -26,9 +22,7 @@ class StockBookService:
             raise ValueError("기관 정보가 존재하지 않습니다.")
 
 
-    # --------------------------
     # 3. 기존 책 존재 여부 조회
-    # --------------------------
     @staticmethod
     def find_existing_book(institution, data):
         return InventoryBook.objects.filter(
@@ -38,9 +32,7 @@ class StockBookService:
         ).first()
 
 
-    # --------------------------
     # 4. 기존 책 stock 증가
-    # --------------------------
     @staticmethod
     def increase_stock(book, stock_to_add):
         book.stock += stock_to_add
@@ -48,9 +40,7 @@ class StockBookService:
         return book
 
 
-    # --------------------------
     # 5. 새 책 생성
-    # --------------------------
     @staticmethod
     def create_new_book(institution, data, stock_to_add):
         return InventoryBook.objects.create(
@@ -64,9 +54,7 @@ class StockBookService:
         )
 
 
-    # --------------------------
     # 6. 메인 로직
-    # --------------------------
     @staticmethod
     def add_inventory_book(user_id, data):
 
