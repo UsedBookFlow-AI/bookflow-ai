@@ -4,6 +4,7 @@ from rest_framework import status
 from db_core.services.user_service import UserService
 from db_core.services.stock_book_service import StockBookService
 from db_core.services.book_supply_request_service import BookSupplyRequestService
+from db_core.services.mypage_service import MyPageService
 from ai_engine.services.recsys_engine_service import RecsysEngineService
 from db_core.serializers import RegisterUserSerializer, LoginUserSerializer, StoreInventoryBookSerializer, StoreBookSupplyRequestSerializer, InventoryBookResponseSerializer, BookSupplyApplySerializer
 from django.contrib.auth.models import User
@@ -109,6 +110,8 @@ class StoreBookSupplyRequestView(APIView):
             status = 201
         )
 
+
+
 class ApplyBookSupplyView(APIView):
     def post(self, request):
         serializer = BookSupplyApplySerializer(data=request.data)
@@ -125,3 +128,18 @@ class ApplyBookSupplyView(APIView):
                             status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
         return Response(result, status=status.HTTP_201_CREATED)
+
+
+
+class MyPageView(APIView):
+    def get(self, request, user_id):
+        try:
+            data = MyPageService.get_mypage_data(user_id)
+            return Response(data, status=status.HTTP_200_OK)
+        except ValueError as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return Response(
+                {"error": "서버 오류 발생", "detail": str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )

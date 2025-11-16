@@ -25,8 +25,8 @@ class BookSupplyRequestService:
     @staticmethod
     @transaction.atomic
     def apply_supply_request(data):
-        user = User.objects.get(id=data['user_id'])
-        requester_inst = Institution.objects.get(user_id=user)
+        user = User.objects.get(username=data['user_id'])
+        requester_inst = Institution.objects.get(user=user)
         supplier_inst = Institution.objects.get(id=data['institution_id'])
         book = InventoryBook.objects.select_for_update().get(id=data['book_id'], institution=supplier_inst)
         req_amount = int(data['request_stock'])
