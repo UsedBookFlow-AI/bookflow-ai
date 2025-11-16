@@ -49,3 +49,32 @@ class BookSupplyRequest(models.Model):
     others = models.TextField(null=True, blank=True)
     status = models.CharField(max_length=20, default = 'pending')
     created_at = models.DateTimeField(auto_now_add=True)
+
+
+class BookSupplyTransaction(models.Model):
+    REQUEST_STATUS = [
+        ("pending", "Pending"),
+        ("approved", "Approved"),
+        ("rejected", "Rejected"),
+        ("completed", "Completed"),
+    ]
+
+    #신청한 기관 (수급 기관)
+    requester_institution = models.ForeignKey(
+        Institution, on_delete=models.CASCADE, related_name='requested_transaction'
+    )
+
+    #책을 보유한 기관 (공급 기관)
+    supplier_institution = models.ForeignKey(
+        Institution, on_delete=models.CASCADE, related_name='supplied_transaction'
+    )
+
+    #신청한 책
+    book = models.ForeignKey(
+        InventoryBook, on_delete=models.CASCADE, related_name='transactions'
+    )
+
+    requested_amount = models.IntegerField()
+    status = models.CharField(max_length=20, choices=REQUEST_STATUS, default='pending')
+    created_at = models.DateTimeField(auto_now_add = True)
+

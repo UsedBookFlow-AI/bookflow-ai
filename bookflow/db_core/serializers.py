@@ -90,3 +90,15 @@ class InventoryBookResponseSerializer(serializers.ModelSerializer):
             "institution",
             "institution_name"
         ]
+
+
+class BookSupplyApplySerializer(serializers.Serializer):
+    user_id = serializers.CharField()
+    institution_id = serializers.CharField()
+    book_id = serializers.CharField()
+    request_stock = serializers.IntegerField()
+
+    def validate_request_stock(self, value):
+        if value <= 0:
+            raise serializers.ValidationError("신청 수량은 1 이상이어야 합니다.")
+        return value
